@@ -1,0 +1,26 @@
+body {
+    display: flex;
+    height: 100svh;
+    align-items: center;
+    justify-content: center;
+}
+
+.gameboard {
+    height: 50svh;
+    width: 50svh;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.square {
+    background-color: lightblue;
+    cursor: pointer;
+    font-size: 3rem;
+
+    &:hover {
+        background-color: rgb(143, 177, 188);
+    }
+}
