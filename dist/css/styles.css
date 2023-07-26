@@ -15,9 +15,12 @@ body {
 }
 
 .square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: lightblue;
   cursor: pointer;
-  font-size: 3rem;
+  font-size: 4rem;
 }
 .square:hover {
   background-color: rgb(143, 177, 188);
