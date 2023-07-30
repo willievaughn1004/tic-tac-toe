@@ -71,17 +71,15 @@ const updateBoardVisual = () => {
   const addTokenToBoard = (e) => {
     const newSymbol = document.createElement("i");
 
-    if (e.target.childNodes.length === 0) {
-      if (controller.getActivePlayer() === 1) {
-        newSymbol.setAttribute("class", "fa-solid fa-x");
-      } else {
-        newSymbol.setAttribute("class", "fa-solid fa-o");
-      }
-
-      e.target.append(newSymbol);
-      controller.playRound();
-      e.target.removeEventListener("click", addTokenToBoard);
+    if (controller.getActivePlayer() === 1) {
+      newSymbol.setAttribute("class", "fa-solid fa-x");
+    } else {
+      newSymbol.setAttribute("class", "fa-solid fa-o");
     }
+
+    e.target.append(newSymbol);
+    controller.playRound();
+    e.target.removeEventListener("click", addTokenToBoard);
   };
 
   squares.forEach((square) =>
