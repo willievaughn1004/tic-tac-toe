@@ -43,6 +43,10 @@ function Controller() {
     return activePlayer;
   };
 
+  const getActivePlayer = () => {
+    return activePlayer;
+  };
+
   const getToken = () => {
     return players[activePlayer - 1].token;
   };
@@ -55,26 +59,34 @@ function Controller() {
 
   return {
     playRound,
+    getActivePlayer,
   };
 }
 
-const gameOne = Controller();
+const updateBoardVisual = () => {
+  const squares = document.querySelectorAll(".square");
 
-gameOne.playRound(0);
-gameOne.playRound(1);
-gameOne.playRound(2);
-gameOne.playRound(3);
+  const controller = Controller();
 
-// const updateBoardVisual = () => {
-//     const squares = document.querySelectorAll(".square");
+  const addTokenToBoard = (e) => {
+    const newSymbol = document.createElement("i");
 
-//     squares.forEach((square) =>
-//       square.addEventListener("click", function (e) {
-//         let newSymbol = document.createElement("i");
-//         newSymbol.setAttribute("class", "fa-solid fa-x");
-//         e.target.append(newSymbol);
-//       })
-//     );
-//   };
+    if (e.target.childNodes.length === 0) {
+      if (controller.getActivePlayer() === 1) {
+        newSymbol.setAttribute("class", "fa-solid fa-x");
+      } else {
+        newSymbol.setAttribute("class", "fa-solid fa-o");
+      }
 
-// updateBoardVisual();
+      e.target.append(newSymbol);
+      controller.playRound();
+      e.target.removeEventListener("click", addTokenToBoard);
+    }
+  };
+
+  squares.forEach((square) =>
+    square.addEventListener("click", addTokenToBoard)
+  );
+};
+
+updateBoardVisual();
