@@ -1,28 +1,21 @@
 //
 
-function Gameboard() {
-  let board = [null, null, null, null, null, null, null, null, null];
+const Gameboard = {
+  board: [null, null, null, null, null, null, null, null, null],
 
-  const addToken = (index, token) => {
-    board[index] = token;
-    console.log(board);
-  };
+  addToken: function (index, token) {
+    this.board[index] = token;
+  },
 
-  const getBoard = () => {
-    return board;
-  };
+  getBoard: function () {
+    return this.board;
+  },
 
-  const displayBoard = () => {
-    console.log(board[0], board[1], board[2]);
-    console.log(board[3], board[4], board[5]);
-    console.log(board[6], board[7], board[8]);
-  };
-
-  return {
-    addToken,
-    getBoard,
-    displayBoard,
-  };
+  displayBoard: function () {
+    console.log(this.board[0], this.board[1], this.board[2]);
+    console.log(this.board[3], this.board[4], this.board[5]);
+    console.log(this.board[6], this.board[7], this.board[8]);
+  }
 }
 
 function GameLogic() {
@@ -64,7 +57,6 @@ function GameLogic() {
 }
 
 const controlGameFlow = () => {
-  const gameBoard = Gameboard();
   const controller = GameLogic();
 
   const squares = document.querySelectorAll(".square");
@@ -89,10 +81,10 @@ const controlGameFlow = () => {
   };
 
   const playRound = (space) => {
-    gameBoard.addToken(space, controller.getToken());
+    Gameboard.addToken(space, controller.getToken());
     controller.changePlayer();
-    gameBoard.displayBoard();
-    updateBoardVisual(gameBoard.getBoard());
+    Gameboard.displayBoard();
+    updateBoardVisual(Gameboard.getBoard());
   };
 
   squares.forEach((square) =>
