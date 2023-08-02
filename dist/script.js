@@ -1,9 +1,15 @@
+//
+
 function Gameboard() {
   let board = [null, null, null, null, null, null, null, null, null];
 
   const addToken = (index, token) => {
     board[index] = token;
     console.log(board);
+  };
+
+  const getBoard = () => {
+    return board;
   };
 
   const displayBoard = () => {
@@ -14,13 +20,12 @@ function Gameboard() {
 
   return {
     addToken,
+    getBoard,
     displayBoard,
   };
 }
 
-function Controller() {
-  const gameBoard = Gameboard();
-
+function GameLogic() {
   let activePlayer = 1;
 
   const players = [
@@ -51,40 +56,57 @@ function Controller() {
     return players[activePlayer - 1].token;
   };
 
-  const playRound = (space) => {
-    gameBoard.addToken(space, getToken());
-    changePlayer();
-    gameBoard.displayBoard();
-  };
-
   return {
-    playRound,
+    getToken,
+    changePlayer,
     getActivePlayer,
   };
 }
 
-const updateBoardVisual = () => {
+const controlGameFlow = () => {
+  const gameBoard = Gameboard();
+  const controller = GameLogic();
+
   const squares = document.querySelectorAll(".square");
 
-  const controller = Controller();
+  const updateBoardVisual = (board) => {
 
-  const addTokenToBoard = (e) => {
-    const newSymbol = document.createElement("i");
+    for (i = 0; i <= board.length; i++) {
+      const newSymbol = document.createElement("i");
 
-    if (controller.getActivePlayer() === 1) {
-      newSymbol.setAttribute("class", "fa-solid fa-x");
-    } else {
-      newSymbol.setAttribute("class", "fa-solid fa-o");
+      if (board[i] === "x") {
+        newSymbol.setAttribute("class", "fa-solid fa-x");
+      } else if (board[i] === "o") {
+        newSymbol.setAttribute("class", "fa-solid fa-o");
+      } else {
+        continue;
+      }
+
+      if (!squares[i].innerHTML) {
+        squares[i].append(newSymbol);
+      }
     }
+  };
 
-    e.target.append(newSymbol);
-    controller.playRound();
-    e.target.removeEventListener("click", addTokenToBoard);
+  const playRound = (space) => {
+    gameBoard.addToken(space, controller.getToken());
+    controller.changePlayer();
+    gameBoard.displayBoard();
+    updateBoardVisual(gameBoard.getBoard());
   };
 
   squares.forEach((square) =>
-    square.addEventListener("click", addTokenToBoard)
+    square.addEventListener("click", function (event) {
+      const tile = event.target.getAttribute("id");
+      playRound(tile);
+    })
   );
 };
 
-updateBoardVisual();
+controlGameFlow();
+
+/* Win coniditions 
+
+
+
+*/
