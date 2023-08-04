@@ -11,14 +11,14 @@ const Gameboard = {
     return this.board;
   },
 
-  displayBoard: function () {
-    console.log(this.board[0], this.board[1], this.board[2]);
-    console.log(this.board[3], this.board[4], this.board[5]);
-    console.log(this.board[6], this.board[7], this.board[8]);
-  }
+//   displayBoard: function () {
+//     console.log(this.board[0], this.board[1], this.board[2]);
+//     console.log(this.board[3], this.board[4], this.board[5]);
+//     console.log(this.board[6], this.board[7], this.board[8]);
+//   }
 }
 
-function GameLogic() {
+function setGameLogic() {
   let activePlayer = 1;
 
   const players = [
@@ -57,7 +57,7 @@ function GameLogic() {
 }
 
 const controlGameFlow = () => {
-  const controller = GameLogic();
+  const controller = setGameLogic();
 
   const squares = document.querySelectorAll(".square");
 
@@ -80,10 +80,14 @@ const controlGameFlow = () => {
     }
   };
 
+  const setWinConditions = () => {
+    
+  }
+
   const playRound = (space) => {
     Gameboard.addToken(space, controller.getToken());
     controller.changePlayer();
-    Gameboard.displayBoard();
+    // Gameboard.displayBoard();
     updateBoardVisual(Gameboard.getBoard());
   };
 
@@ -96,9 +100,3 @@ const controlGameFlow = () => {
 };
 
 controlGameFlow();
-
-/* Win coniditions 
-
-
-
-*/
