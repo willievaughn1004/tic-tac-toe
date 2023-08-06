@@ -11,11 +11,15 @@ const Gameboard = {
     return this.board;
   },
 
-  //   displayBoard: function () {
-  //     console.log(this.board[0], this.board[1], this.board[2]);
-  //     console.log(this.board[3], this.board[4], this.board[5]);
-  //     console.log(this.board[6], this.board[7], this.board[8]);
-  //   }
+  displayBoard: function () {
+    console.log(this.board[0], this.board[1], this.board[2]);
+    console.log(this.board[3], this.board[4], this.board[5]);
+    console.log(this.board[6], this.board[7], this.board[8]);
+  },
+
+  resetBoard: function () {
+    this.board = [null, null, null, null, null, null, null, null, null];
+  },
 };
 
 function setGameLogic() {
@@ -62,7 +66,7 @@ const controlGameFlow = () => {
   const squares = document.querySelectorAll(".square");
 
   const updateBoardVisual = (board) => {
-    for (i = 0; i <= board.length; i++) {
+    for (i = 0; i < board.length; i++) {
       const newSymbol = document.createElement("i");
 
       if (board[i] === "x") {
@@ -80,32 +84,44 @@ const controlGameFlow = () => {
   };
 
   //   const setWinConditions = () => {
+  //     const currentGameBoard = Gameboard.getBoard();
 
+  //     if (Game) {
+  //     }
   //   };
+
+  const restartButton = document.querySelector(".restart");
+  const setResetButton = () => {
+    Gameboard.resetBoard();
+  };
+
+  restartButton.addEventListener("click", setResetButton);
 
   const updatePlayerTurn = () => {
     const playerTurn = document.querySelector(".player-turn");
 
     if (controller.getActivePlayer() === 1) {
-        playerTurn.textContent = "Player O's Turn"
+      playerTurn.textContent = "Player O's Turn";
     } else {
-        playerTurn.textContent = "Player X's Turn"
+      playerTurn.textContent = "Player X's Turn";
     }
-
   };
 
   const playRound = (space) => {
     Gameboard.addToken(space, controller.getToken());
     updatePlayerTurn();
     controller.changePlayer();
-    // Gameboard.displayBoard();
+    Gameboard.displayBoard();
     updateBoardVisual(Gameboard.getBoard());
   };
 
   squares.forEach((square) =>
-    square.addEventListener("click", function (event) {
-      const tile = event.target.getAttribute("id");
-      playRound(tile);
+    square.addEventListener("click", function () {
+      if (this.innerHTML === "") {
+        const tile = this.getAttribute("id");
+        console.log(this.innerHTML)
+        playRound(tile);
+      }
     })
   );
 };
