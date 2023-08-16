@@ -108,13 +108,22 @@ const controlGameFlow = () => {
         currentBoard[c] === "x"
       ) {
         playerTurn.textContent = "Player X wins.";
+        return;
       } else if (
         currentBoard[a] === "o" &&
         currentBoard[b] === "o" &&
         currentBoard[c] === "o"
       ) {
         playerTurn.textContent = "Player O wins.";
+        return;
       }
+    }
+
+    const checkForTie = (elem) => elem !== null;
+
+    if (currentBoard.every(checkForTie)) {
+      playerTurn.textContent = "Players are tied.";
+      return;
     }
   };
 
