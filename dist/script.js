@@ -1,5 +1,4 @@
-
-
+// Includes the board and functions related to the board.
 const Gameboard = {
   board: [null, null, null, null, null, null, null, null, null],
 
@@ -11,17 +10,12 @@ const Gameboard = {
     return this.board;
   },
 
-  displayBoard: function () {
-    console.log(this.board[0], this.board[1], this.board[2]);
-    console.log(this.board[3], this.board[4], this.board[5]);
-    console.log(this.board[6], this.board[7], this.board[8]);
-  },
-
   resetBoard: function () {
     this.board = [null, null, null, null, null, null, null, null, null];
   },
 };
 
+// This is here to keep track of players, player turns, and player related functions
 function setGameLogic() {
   let activePlayer = 1;
 
@@ -60,6 +54,7 @@ function setGameLogic() {
   };
 }
 
+// Controls the game and UI.
 const controlGameFlow = () => {
   const controller = setGameLogic();
   const squares = document.querySelectorAll(".square");
@@ -84,7 +79,6 @@ const controlGameFlow = () => {
   };
 
   const setWinConditions = () => {
-
     if (
       playerTurn.textContent === "Player O wins." ||
       playerTurn.textContent === "Player X wins."
@@ -113,7 +107,6 @@ const controlGameFlow = () => {
         currentBoard[b] === "x" &&
         currentBoard[c] === "x"
       ) {
-        console.log("Player X Wins.");
         playerTurn.textContent = "Player X wins.";
       } else if (
         currentBoard[a] === "o" &&
@@ -130,12 +123,11 @@ const controlGameFlow = () => {
   const setResetButton = () => {
     Gameboard.resetBoard();
     squares.forEach((square) => (square.innerHTML = ""));
-    console.log(controller.getActivePlayer());
     if (controller.getActivePlayer() === 2) {
       controller.changePlayer();
-    };
+    }
 
-    playerTurn.innerText = "Player X's Turn"
+    playerTurn.innerText = "Player X's Turn";
   };
 
   restartButton.addEventListener("click", setResetButton);
@@ -159,7 +151,6 @@ const controlGameFlow = () => {
     Gameboard.addToken(space, controller.getToken());
     updatePlayerTurn();
     controller.changePlayer();
-    Gameboard.displayBoard();
     updateBoardVisual(Gameboard.getBoard());
     setWinConditions();
   };
@@ -168,7 +159,6 @@ const controlGameFlow = () => {
     square.addEventListener("click", function () {
       if (this.innerHTML === "") {
         const tile = this.getAttribute("id");
-        console.log(this.innerHTML);
         playRound(tile);
       }
     })
