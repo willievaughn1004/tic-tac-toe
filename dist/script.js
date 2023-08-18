@@ -23,10 +23,12 @@ function setGameLogic() {
     {
       player: 1,
       token: "x",
+      name: "Player X",
     },
     {
       player: 2,
       token: "o",
+      name: "Player O",
     },
   ];
 
@@ -47,12 +49,30 @@ function setGameLogic() {
     return players[activePlayer - 1].token;
   };
 
+  const getPlayerOneName = () => {
+    return players[0].name;
+  };
+
+  const getPlayerTwoName = () => {
+    return players[1].name;
+  };
+
+  const changePlayerNames = (one, two) => {
+    players[0].name = one;
+    players[1].name = two;
+  };
+
   return {
     getToken,
     changePlayer,
     getActivePlayer,
+    getPlayerOneName,
+    getPlayerTwoName,
+    changePlayerNames,
   };
 }
+
+// Controls the functionality of Reset Button
 
 // Controls the game and UI.
 const controlGameFlow = () => {
@@ -75,6 +95,35 @@ const controlGameFlow = () => {
       if (!squares[i].innerHTML) {
         squares[i].append(newSymbol);
       }
+    }
+  };
+
+  const restartButton = document.querySelector(".restart");
+
+  const setResetButton = () => {
+    Gameboard.resetBoard();
+    squares.forEach((square) => (square.innerHTML = ""));
+    if (controller.getActivePlayer() === 2) {
+      controller.changePlayer();
+    }
+
+    playerTurn.innerText = "Player X's Turn";
+  };
+
+  restartButton.addEventListener("click", setResetButton);
+
+  const updatePlayerTurn = () => {
+    if (
+      playerTurn.textContent === "Player O wins." ||
+      playerTurn.textContent === "Player X wins."
+    ) {
+      return;
+    }
+
+    if (controller.getActivePlayer() === 1) {
+      playerTurn.textContent = "Player O's Turn";
+    } else {
+      playerTurn.textContent = "Player X's Turn";
     }
   };
 
@@ -127,35 +176,6 @@ const controlGameFlow = () => {
     }
   };
 
-  const restartButton = document.querySelector(".restart");
-
-  const setResetButton = () => {
-    Gameboard.resetBoard();
-    squares.forEach((square) => (square.innerHTML = ""));
-    if (controller.getActivePlayer() === 2) {
-      controller.changePlayer();
-    }
-
-    playerTurn.innerText = "Player X's Turn";
-  };
-
-  restartButton.addEventListener("click", setResetButton);
-
-  const updatePlayerTurn = () => {
-    if (
-      playerTurn.textContent === "Player O wins." ||
-      playerTurn.textContent === "Player X wins."
-    ) {
-      return;
-    }
-
-    if (controller.getActivePlayer() === 1) {
-      playerTurn.textContent = "Player O's Turn";
-    } else {
-      playerTurn.textContent = "Player X's Turn";
-    }
-  };
-
   const playRound = (space) => {
     Gameboard.addToken(space, controller.getToken());
     updatePlayerTurn();
@@ -174,4 +194,41 @@ const controlGameFlow = () => {
   );
 };
 
+const controlUI = () => {
+  const nameModal = document.querySelector(".name-modal");
+
+  const toggleNameModal = () => {
+    nameModal.classList.toggle("active");
+  };
+
+  const setNameBtn = document.querySelector(".set_name")
+  setNameBtn.addEventListener("click", toggleNameModal);
+
+  window.addEventListener("click", function (e) {
+    if (e.target === nameModal) {
+      toggleNameModal();
+    }
+  });
+  
+};
+
+const setPlayerNames = () => {
+  const playerOneName = document.querySelector("#player_1");
+  const playerTwoName = document.querySelector("#player_2");
+
+  const getPlayerOneName = () => {
+    return playerOneName.innerText;
+  };
+
+  const getPlayerTwoName = () => {
+    return playerTwoName.innerText;
+  };
+
+  return {
+    getPlayerOneName,
+    getPlayerTwoName,
+  };
+};
+
 controlGameFlow();
+controlUI();

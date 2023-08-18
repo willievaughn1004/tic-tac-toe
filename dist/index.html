@@ -14,27 +14,47 @@
   <body>
     <header>Tic-Tac-Toe</header>
 
-    <main class="game">
+    <div class="name-modal">
+      <div class="modal-content">
+        <p>Welcome to Tik-Tac-Toe!</p>
+        <p>Who's playing?</p>
+        <fieldset>
+          <label for="player_1">Player 1:</label>
+          <input type="text" name="player_1" id="player_1" />
+        </fieldset>
+        <fieldset>
+          <label for="player_2">Player 2:</label>
+          <input type="text" name="player_2" id="player_2" />
+        </fieldset>
+        <button class="submit">Submit</button>
+      </div>
+    </div>
 
+    <main class="game">
       <div class="player-turn">Player X's Turn</div>
 
       <div class="gameboard">
         <div id="0" class="square"></div>
         <div id="1" class="square"></div>
         <div id="2" class="square"></div>
-  
+
         <div id="3" class="square"></div>
         <div id="4" class="square"></div>
         <div id="5" class="square"></div>
-  
+
         <div id="6" class="square"></div>
         <div id="7" class="square"></div>
         <div id="8" class="square"></div>
       </div>
 
       <button class="restart">Restart</button>
+      <button class="set_name">Set Names</button>
+      <button class="ai">Play Against AI</button>
     </main>
 
-    <footer>Copyright <i class="fa-regular fa-copyright"></i> willievaughn1004 <i class="fa-brands fa-github"></i></footer>
+    <footer>
+      Copyright <i class="fa-regular fa-copyright"></i> willievaughn1004
+      <i class="fa-brands fa-github"></i>
+    </footer>
   </body>
 </html>
