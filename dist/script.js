@@ -28,7 +28,7 @@ const PlayerLogic = {
     },
   ],
 
-  changePlayer: function() {
+  changePlayer: function () {
     this.activePlayer =
       this.activePlayer === this.players[0].player
         ? this.players[1].player
@@ -37,20 +37,20 @@ const PlayerLogic = {
     return this.activePlayer;
   },
 
-  getActivePlayer: function() {
+  getActivePlayer: function () {
     return this.activePlayer;
   },
 
-  getToken: function() {
+  getToken: function () {
     return this.players[this.activePlayer - 1].token;
   },
 
-  changePlayerNames: function(one, two) {
+  changePlayerNames: function (one, two) {
     this.players[0].name = one;
     this.players[1].name = two;
   },
 
-  resetCurrentPlayerName: function() {
+  resetCurrentPlayerName: function () {
     let currentPlayer = document.querySelector(".player-turn");
 
     if (this.activePlayer === 1) {
@@ -58,8 +58,7 @@ const PlayerLogic = {
     } else {
       currentPlayer.innerText = `${this.players[1].name}'s Turn`;
     }
-
-  }
+  },
 };
 
 // Controls the functionality of Reset Button
@@ -175,11 +174,16 @@ const controlGameFlow = () => {
       }
     })
   );
+
+  return {
+    setResetButton,
+  };
 };
 
 const controlUI = () => {
   // Handles Name Modal
   const nameModal = document.querySelector(".name-modal");
+  const gameLogic = controlGameFlow();
 
   const toggleNameModal = () => {
     nameModal.classList.toggle("active");
@@ -199,6 +203,7 @@ const controlUI = () => {
   setNameSubmit.addEventListener("click", function () {
     setPlayerNames();
     toggleNameModal();
+    gameLogic.setResetButton();
     PlayerLogic.resetCurrentPlayerName();
   });
 };
