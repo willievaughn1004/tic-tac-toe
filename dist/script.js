@@ -103,9 +103,9 @@ const controlGameFlow = () => {
 
   const updatePlayerTurn = () => {
     if (controller.getActivePlayer() === 1) {
-      playerTurn.textContent = `${controller.players[1].name}'s Turn.`;
+      playerTurn.textContent = `${controller.players[1].name}'s Turn`;
     } else {
-      playerTurn.textContent = `${controller.players[0].name}'s Turn.`;
+      playerTurn.textContent = `${controller.players[0].name}'s Turn`;
     }
   };
 
