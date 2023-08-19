@@ -6,20 +6,16 @@ const Gameboard = {
     this.board[index] = token;
   },
 
-  getBoard: function () {
-    return this.board;
-  },
-
   resetBoard: function () {
     this.board = [null, null, null, null, null, null, null, null, null];
   },
 };
 
 // This is here to keep track of players, player turns, and player related functions
-function setGameLogic() {
-  let activePlayer = 1;
+const PlayerLogic = {
+  activePlayer: 1,
 
-  const players = [
+  players: [
     {
       player: 1,
       token: "x",
@@ -30,53 +26,36 @@ function setGameLogic() {
       token: "o",
       name: "Player O",
     },
-  ];
+  ],
 
-  const changePlayer = () => {
-    activePlayer =
-      activePlayer === players[0].player
-        ? players[1].player
-        : players[0].player;
+  changePlayer: function() {
+    this.activePlayer =
+      this.activePlayer === this.players[0].player
+        ? this.players[1].player
+        : this.players[0].player;
 
-    return activePlayer;
-  };
+    return this.activePlayer;
+  },
 
-  const getActivePlayer = () => {
-    return activePlayer;
-  };
+  getActivePlayer: function() {
+    return this.activePlayer;
+  },
 
-  const getToken = () => {
-    return players[activePlayer - 1].token;
-  };
+  getToken: function() {
+    return this.players[this.activePlayer - 1].token;
+  },
 
-  const getPlayerOneName = () => {
-    return players[0].name;
-  };
-
-  const getPlayerTwoName = () => {
-    return players[1].name;
-  };
-
-  const changePlayerNames = (one, two) => {
-    players[0].name = one;
-    players[1].name = two;
-  };
-
-  return {
-    getToken,
-    changePlayer,
-    getActivePlayer,
-    getPlayerOneName,
-    getPlayerTwoName,
-    changePlayerNames,
-  };
-}
+  changePlayerNames: function(one, two) {
+    this.players[0].name = one;
+    this.players[1].name = two;
+  },
+};
 
 // Controls the functionality of Reset Button
 
 // Controls the game and UI.
 const controlGameFlow = () => {
-  const controller = setGameLogic();
+  const controller = PlayerLogic;
   const squares = document.querySelectorAll(".square");
   const playerTurn = document.querySelector(".player-turn");
 
@@ -107,35 +86,21 @@ const controlGameFlow = () => {
       controller.changePlayer();
     }
 
-    playerTurn.innerText = "Player X's Turn";
+    playerTurn.innerText = `${controller.players[0].name}'s Turn`;
   };
 
   restartButton.addEventListener("click", setResetButton);
 
   const updatePlayerTurn = () => {
-    if (
-      playerTurn.textContent === "Player O wins." ||
-      playerTurn.textContent === "Player X wins."
-    ) {
-      return;
-    }
-
     if (controller.getActivePlayer() === 1) {
-      playerTurn.textContent = "Player O's Turn";
+      playerTurn.textContent = `${controller.players[1].name}'s Turn.`;
     } else {
-      playerTurn.textContent = "Player X's Turn";
+      playerTurn.textContent = `${controller.players[0].name}'s Turn.`;
     }
   };
 
   const setWinConditions = () => {
-    if (
-      playerTurn.textContent === "Player O wins." ||
-      playerTurn.textContent === "Player X wins."
-    ) {
-      return;
-    }
-
-    const currentBoard = Gameboard.getBoard();
+    const currentBoard = Gameboard.board;
 
     const winScenarios = [
       [0, 1, 2],
@@ -156,14 +121,14 @@ const controlGameFlow = () => {
         currentBoard[b] === "x" &&
         currentBoard[c] === "x"
       ) {
-        playerTurn.textContent = "Player X wins.";
+        playerTurn.textContent = `${controller.players[0].name} wins.`;
         return;
       } else if (
         currentBoard[a] === "o" &&
         currentBoard[b] === "o" &&
         currentBoard[c] === "o"
       ) {
-        playerTurn.textContent = "Player O wins.";
+        playerTurn.textContent = `${controller.players[1].name} wins.`;
         return;
       }
     }
@@ -177,10 +142,17 @@ const controlGameFlow = () => {
   };
 
   const playRound = (space) => {
+    if (
+      playerTurn.textContent === `${controller.players[1].name} wins.` ||
+      playerTurn.textContent === `${controller.players[0].name} wins.`
+    ) {
+      return;
+    }
+
     Gameboard.addToken(space, controller.getToken());
     updatePlayerTurn();
     controller.changePlayer();
-    updateBoardVisual(Gameboard.getBoard());
+    updateBoardVisual(Gameboard.board);
     setWinConditions();
   };
 
@@ -195,13 +167,14 @@ const controlGameFlow = () => {
 };
 
 const controlUI = () => {
+  // Handles Name Modal
   const nameModal = document.querySelector(".name-modal");
 
   const toggleNameModal = () => {
     nameModal.classList.toggle("active");
   };
 
-  const setNameBtn = document.querySelector(".set_name")
+  const setNameBtn = document.querySelector(".set_name");
   setNameBtn.addEventListener("click", toggleNameModal);
 
   window.addEventListener("click", function (e) {
@@ -209,25 +182,24 @@ const controlUI = () => {
       toggleNameModal();
     }
   });
-  
+
+  // Handles changing the player names
+  const setNameSubmit = document.querySelector(".submit");
+  setNameSubmit.addEventListener("click", function () {
+    setPlayerNames();
+    toggleNameModal();
+  });
 };
 
 const setPlayerNames = () => {
   const playerOneName = document.querySelector("#player_1");
   const playerTwoName = document.querySelector("#player_2");
+  const controller = Playerlogic;
 
-  const getPlayerOneName = () => {
-    return playerOneName.innerText;
-  };
+  console.log(playerOneName.value, playerTwoName.value);
 
-  const getPlayerTwoName = () => {
-    return playerTwoName.innerText;
-  };
-
-  return {
-    getPlayerOneName,
-    getPlayerTwoName,
-  };
+  controller.changePlayerNames(playerOneName.value, playerTwoName.value);
+  console.log(controller.players[0].name, controller.players[1].name);
 };
 
 controlGameFlow();
