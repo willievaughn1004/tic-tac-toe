@@ -49,6 +49,17 @@ const PlayerLogic = {
     this.players[0].name = one;
     this.players[1].name = two;
   },
+
+  resetCurrentPlayerName: function() {
+    let currentPlayer = document.querySelector(".player-turn");
+
+    if (this.activePlayer === 1) {
+      currentPlayer.innerText = `${this.players[0].name}'s Turn`;
+    } else {
+      currentPlayer.innerText = `${this.players[1].name}'s Turn`;
+    }
+
+  }
 };
 
 // Controls the functionality of Reset Button
@@ -188,13 +199,14 @@ const controlUI = () => {
   setNameSubmit.addEventListener("click", function () {
     setPlayerNames();
     toggleNameModal();
+    PlayerLogic.resetCurrentPlayerName();
   });
 };
 
 const setPlayerNames = () => {
   const playerOneName = document.querySelector("#player_1");
   const playerTwoName = document.querySelector("#player_2");
-  const controller = Playerlogic;
+  const controller = PlayerLogic;
 
   console.log(playerOneName.value, playerTwoName.value);
 
