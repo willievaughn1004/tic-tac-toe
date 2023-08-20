@@ -12,7 +12,7 @@ const Gameboard = {
 };
 
 // This is here to keep track of players, player turns, and player related functions
-const PlayerLogic = {
+const GameLogic = {
   activePlayer: 1,
 
   players: [
@@ -59,13 +59,71 @@ const PlayerLogic = {
       currentPlayer.innerText = `${this.players[1].name}'s Turn`;
     }
   },
+
+  setWinConditions: function () {
+    const currentBoard = Gameboard.board;
+    const playerTurn = document.querySelector(".player-turn");
+    // const playerOneWin = false;
+    // const playerTwoWin = false;
+
+    // const changePlayerWin = () => {
+    //   if (playerOneWin || playerTwoWin) {
+    // const playerOneWin = false;
+    // const playerTwoWin = flase;
+    //   } else {
+    // playerOneWin = false;
+    // playerTwoWin = false;
+    //   }
+    // };
+
+    const winScenarios = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (const combination of winScenarios) {
+      const [a, b, c] = combination;
+
+      if (
+        currentBoard[a] === "x" &&
+        currentBoard[b] === "x" &&
+        currentBoard[c] === "x"
+      ) {
+        playerTurn.textContent = `${this.players[0].name} wins.`;
+        currentPlayerWin = true;
+        return;
+      } else if (
+        currentBoard[a] === "o" &&
+        currentBoard[b] === "o" &&
+        currentBoard[c] === "o"
+      ) {
+        playerTurn.textContent = `${this.players[1].name} wins.`;
+        currentPlayerWin = true;
+        return;
+      }
+    }
+
+    const checkForTie = (elem) => elem !== null;
+
+    if (currentBoard.every(checkForTie)) {
+      playerTurn.textContent = "Players are tied.";
+      console.log(currentBoard);
+      return;
+    }
+  },
 };
 
 // Controls the functionality of Reset Button
 
 // Controls the game and UI.
 const controlGameFlow = () => {
-  const controller = PlayerLogic;
+  const controller = GameLogic;
   const squares = document.querySelectorAll(".square");
   const playerTurn = document.querySelector(".player-turn");
 
@@ -109,48 +167,6 @@ const controlGameFlow = () => {
     }
   };
 
-  const setWinConditions = () => {
-    const currentBoard = Gameboard.board;
-
-    const winScenarios = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    for (const combination of winScenarios) {
-      const [a, b, c] = combination;
-
-      if (
-        currentBoard[a] === "x" &&
-        currentBoard[b] === "x" &&
-        currentBoard[c] === "x"
-      ) {
-        playerTurn.textContent = `${controller.players[0].name} wins.`;
-        return;
-      } else if (
-        currentBoard[a] === "o" &&
-        currentBoard[b] === "o" &&
-        currentBoard[c] === "o"
-      ) {
-        playerTurn.textContent = `${controller.players[1].name} wins.`;
-        return;
-      }
-    }
-
-    const checkForTie = (elem) => elem !== null;
-
-    if (currentBoard.every(checkForTie)) {
-      playerTurn.textContent = "Players are tied.";
-      return;
-    }
-  };
-
   const playRound = (space) => {
     if (
       playerTurn.textContent === `${controller.players[1].name} wins.` ||
@@ -163,7 +179,7 @@ const controlGameFlow = () => {
     updatePlayerTurn();
     controller.changePlayer();
     updateBoardVisual(Gameboard.board);
-    setWinConditions();
+    controller.setWinConditions();
   };
 
   squares.forEach((square) =>
@@ -204,14 +220,14 @@ const controlUI = () => {
     setPlayerNames();
     toggleNameModal();
     gameLogic.setResetButton();
-    PlayerLogic.resetCurrentPlayerName();
+    GameLogic.resetCurrentPlayerName();
   });
 };
 
 const setPlayerNames = () => {
   const playerOneName = document.querySelector("#player_1");
   const playerTwoName = document.querySelector("#player_2");
-  const controller = PlayerLogic;
+  const controller = GameLogic;
 
   console.log(playerOneName.value, playerTwoName.value);
 
@@ -221,3 +237,13 @@ const setPlayerNames = () => {
 
 controlGameFlow();
 controlUI();
+
+/* Add to setWinCondition function a variable for checking
+if a player has won. This will be used to stop certain functions from triggers
+instead of just checking the text. 
+
+Change the code so it is more modal, like changing PlayerLogic to GameLogic
+and moving setWinCondition function to GameLogic.
+
+Add enter button as a way to hit the submit button for the set names button
+*/
