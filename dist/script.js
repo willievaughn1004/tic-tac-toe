@@ -78,7 +78,7 @@ const controlGameFlow = () => {
   };
 
   const setWinConditions = function (currentboard) {
-    const winStatus = '';
+    let winStatus = "";
 
     const winScenarios = [
       [0, 1, 2],
@@ -99,21 +99,23 @@ const controlGameFlow = () => {
         currentboard[b] === "x" &&
         currentboard[c] === "x"
       ) {
-        return `${GameLogic.players[0].name} wins`;
+        winStatus = "Player 1";
       } else if (
         currentboard[a] === "o" &&
         currentboard[b] === "o" &&
         currentboard[c] === "o"
       ) {
-        return `${GameLogic.players[1].name} wins`;
+        winStatus = "Player 2";
       }
     }
 
     const checkForTie = (elem) => elem !== null;
 
     if (currentboard.every(checkForTie)) {
-      return "Players are tied.";
+      winStatus = "Tied";
     }
+
+    return winStatus;
   };
 
   const playRound = (space) => {
@@ -147,6 +149,7 @@ const controlUI = () => {
           const tile = this.getAttribute("id");
           updatePlayerStatus();
           gameFlow.playRound(tile);
+          updateWinStatus();
           updateBoardUI();
         }
       }
@@ -198,14 +201,25 @@ const controlUI = () => {
 
   const playerTurn = document.querySelector(".player-turn");
   const updatePlayerStatus = () => {
-    if (gameFlow.setWinConditions() === ) 
-
     if (GameLogic.getActivePlayer() === 1) {
       playerTurn.textContent = `${GameLogic.players[1].name}'s Turn`;
     } else {
       playerTurn.textContent = `${GameLogic.players[0].name}'s Turn`;
     }
   };
+
+  const updateWinStatus = () => {
+    if (gameFlow.setWinConditions(Gameboard.board) === "Player 1") {
+      playerTurn.textContent = `${GameLogic.players[0].name} wins!`;
+      return;
+    } else if (gameFlow.setWinConditions(Gameboard.board) === "Player 2") {
+      playerTurn.textContent = `${GameLogic.players[1].name} wins!`;
+      return;
+    } else if (gameFlow.setWinConditions(Gameboard.board) === "Tied") {
+      playerTurn.textContent = `Players are tied.`;
+      return;
+    }
+  }
 
   const setPlayerNames = () => {
     const playerOneName = document.querySelector("#player_1");
