@@ -78,6 +78,8 @@ const controlGameFlow = () => {
   };
 
   const setWinConditions = function (currentboard) {
+    const winStatus = '';
+
     const winScenarios = [
       [0, 1, 2],
       [3, 4, 5],
@@ -143,9 +145,9 @@ const controlUI = () => {
       if (this.innerHTML === "") {
         if (!gameFlow.setWinConditions(Gameboard.board)) {
           const tile = this.getAttribute("id");
-          updatePlayerTurn();
+          updatePlayerStatus();
           gameFlow.playRound(tile);
-          updateBoardVisual();
+          updateBoardUI();
         }
       }
     })
@@ -176,7 +178,7 @@ const controlUI = () => {
     gameFlow.setResetButton(squares);
   });
 
-  const updateBoardVisual = () => {
+  const updateBoardUI = () => {
     for (i = 0; i < Gameboard.board.length; i++) {
       const newSymbol = document.createElement("i");
 
@@ -195,7 +197,9 @@ const controlUI = () => {
   };
 
   const playerTurn = document.querySelector(".player-turn");
-  const updatePlayerTurn = () => {
+  const updatePlayerStatus = () => {
+    if (gameFlow.setWinConditions() === ) 
+
     if (GameLogic.getActivePlayer() === 1) {
       playerTurn.textContent = `${GameLogic.players[1].name}'s Turn`;
     } else {
@@ -213,11 +217,11 @@ const controlUI = () => {
 
 controlUI();
 
-/* Add to setWinCondition function a variable for checking
-if a player has won. This will be used to stop certain functions from triggers
-instead of just checking the text. 
+/*
 
 Change the code so it is more modal
 
 Add enter button as a way to hit the submit button for the set names button
+
+redo Reset button function so it is more modular
 */
