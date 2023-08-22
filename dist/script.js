@@ -173,7 +173,7 @@ const controlUI = () => {
 
   // Update the UI to display the current game board.
   const updateBoardUI = () => {
-    for (i = 0; i < Gameboard.board.length; i++) {
+    for (let i = 0; i < Gameboard.board.length; i++) {
       const newSymbol = document.createElement("i");
 
       if (Gameboard.board[i] === "x") {
