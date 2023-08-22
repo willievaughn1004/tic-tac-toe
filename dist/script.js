@@ -1,4 +1,4 @@
-// Includes the board and functions related to the board.
+// Maintains the current game board, adds tokens, resetting the board
 const Gameboard = {
   board: [null, null, null, null, null, null, null, null, null],
 
@@ -11,7 +11,7 @@ const Gameboard = {
   },
 };
 
-// This is here to keep track of players, player turns, and player related functions
+// Handles player turns, win conditions, getting tokens
 const GameLogic = {
   activePlayer: 1,
 
@@ -28,6 +28,7 @@ const GameLogic = {
     },
   ],
 
+  // Updates the player turn for the next turn
   changePlayer: function () {
     this.activePlayer =
       this.activePlayer === this.players[0].player
@@ -37,49 +38,22 @@ const GameLogic = {
     return this.activePlayer;
   },
 
-  getActivePlayer: function () {
-    return this.activePlayer;
-  },
-
+  // Get the token of the active player
   getToken: function () {
     return this.players[this.activePlayer - 1].token;
   },
 
+  // Update player names
   changePlayerNames: function (one, two) {
     this.players[0].name = one;
     this.players[1].name = two;
   },
 
-  resetCurrentPlayerName: function () {
-    let currentPlayer = document.querySelector(".player-turn");
-
-    if (this.activePlayer === 1) {
-      currentPlayer.innerText = `${this.players[0].name}'s Turn`;
-    } else {
-      currentPlayer.innerText = `${this.players[1].name}'s Turn`;
-    }
-  },
-};
-
-// Sets win conditions
-
-// Controls the game and UI.
-const controlGameFlow = () => {
-  const playerTurn = document.querySelector(".player-turn");
-
-  const setResetButton = function (tiles) {
-    Gameboard.resetBoard();
-    tiles.forEach((tile) => (tile.innerHTML = ""));
-    if (GameLogic.getActivePlayer() === 2) {
-      GameLogic.changePlayer();
-    }
-
-    playerTurn.innerText = `${GameLogic.players[0].name}'s Turn`;
-  };
-
-  const setWinConditions = function (currentboard) {
+  // Set win status based on the current gameboard.
+  setWinConditions: function (currentboard) {
     let winStatus = "";
 
+    // Winning cominations on the gameboard.
     const winScenarios = [
       [0, 1, 2],
       [3, 4, 5],
@@ -116,8 +90,21 @@ const controlGameFlow = () => {
     }
 
     return winStatus;
+  },
+};
+
+// Manages gameplay
+const controlGameFlow = () => {
+  // Clears the gameboard and resets player to player 1
+  const setResetButton = (tiles) => {
+    Gameboard.resetBoard();
+    tiles.forEach((tile) => (tile.innerHTML = ""));
+    if (GameLogic.activePlayer === 2) {
+      GameLogic.changePlayer();
+    }
   };
 
+  // Plays a round of the game
   const playRound = (space) => {
     Gameboard.addToken(space, GameLogic.getToken());
     GameLogic.changePlayer();
@@ -126,26 +113,28 @@ const controlGameFlow = () => {
   return {
     setResetButton,
     playRound,
-    setWinConditions,
   };
 };
 
+// Handles UI interactions
 const controlUI = () => {
-  // Handles Name Modal
-  const nameModal = document.querySelector(".name-modal");
   const gameFlow = controlGameFlow();
 
+  // Variables for the name modal element
+  const nameModal = document.querySelector(".name-modal");
+
+  // Toggles visibilty of the name modal
   const toggleNameModal = () => {
     nameModal.classList.toggle("active");
   };
 
-  // Squares event listener
+  // Event listener and variables for the gameboard
   const squares = document.querySelectorAll(".square");
 
-  squares.forEach((square) =>
-    square.addEventListener("click", function () {
+  squares.forEach((tile) =>
+    tile.addEventListener("click", function () {
       if (this.innerHTML === "") {
-        if (!gameFlow.setWinConditions(Gameboard.board)) {
+        if (!GameLogic.setWinConditions(Gameboard.board)) {
           const tile = this.getAttribute("id");
           updatePlayerStatus();
           gameFlow.playRound(tile);
@@ -156,31 +145,33 @@ const controlUI = () => {
     })
   );
 
-  // Set name button
+  // Even listener and variables for the set name button
   const setNameBtn = document.querySelector(".set_name");
   setNameBtn.addEventListener("click", toggleNameModal);
 
-  window.addEventListener("click", function (e) {
+  window.addEventListener("click", (e) => {
     if (e.target === nameModal) {
       toggleNameModal();
     }
   });
 
-  // Handles changing the player names
+  // Handles changing the player names after submitting new names
   const setNameSubmit = document.querySelector(".submit");
-  setNameSubmit.addEventListener("click", function () {
+  setNameSubmit.addEventListener("click", () => {
     setPlayerNames();
     toggleNameModal();
     gameFlow.setResetButton(squares);
-    GameLogic.resetCurrentPlayerName();
+    resetCurrentPlayerName();
   });
 
   // Reset button variable and event listener
   const restartButton = document.querySelector(".restart");
-  restartButton.addEventListener("click", function () {
+  restartButton.addEventListener("click", () => {
     gameFlow.setResetButton(squares);
+    resetCurrentPlayerName();
   });
 
+  // Update the UI to display the current game board.
   const updateBoardUI = () => {
     for (i = 0; i < Gameboard.board.length; i++) {
       const newSymbol = document.createElement("i");
@@ -200,42 +191,47 @@ const controlUI = () => {
   };
 
   const playerTurn = document.querySelector(".player-turn");
+  
+  // Updates current player to reflect the active player
   const updatePlayerStatus = () => {
-    if (GameLogic.getActivePlayer() === 1) {
+    if (GameLogic.activePlayer === 1) {
       playerTurn.textContent = `${GameLogic.players[1].name}'s Turn`;
     } else {
       playerTurn.textContent = `${GameLogic.players[0].name}'s Turn`;
     }
   };
 
+  // Updates player status UI to reflect the current win status
   const updateWinStatus = () => {
-    if (gameFlow.setWinConditions(Gameboard.board) === "Player 1") {
+    const winStatus = GameLogic.setWinConditions(Gameboard.board);
+
+    if (winStatus === "Player 1") {
       playerTurn.textContent = `${GameLogic.players[0].name} wins!`;
       return;
-    } else if (gameFlow.setWinConditions(Gameboard.board) === "Player 2") {
+    } else if (winStatus === "Player 2") {
       playerTurn.textContent = `${GameLogic.players[1].name} wins!`;
       return;
-    } else if (gameFlow.setWinConditions(Gameboard.board) === "Tied") {
-      playerTurn.textContent = `Players are tied.`;
+    } else if (winStatus === "Tied") {
+      playerTurn.textContent = "Players are tied.";
       return;
     }
-  }
+  };
 
+  // Changes the player names within the GameLogic object.
   const setPlayerNames = () => {
     const playerOneName = document.querySelector("#player_1");
     const playerTwoName = document.querySelector("#player_2");
 
     GameLogic.changePlayerNames(playerOneName.value, playerTwoName.value);
   };
+
+  // Resets player name to reflect player 1's name.
+  const resetCurrentPlayerName = () => {
+    playerTurn.textContent =
+      GameLogic.activePlayer === 1
+        ? `${GameLogic.players[0].name}'s Turn`
+        : `${GameLogic.players[1].name}'s Turn`;
+  };
 };
 
 controlUI();
-
-/*
-
-Change the code so it is more modal
-
-Add enter button as a way to hit the submit button for the set names button
-
-redo Reset button function so it is more modular
-*/
