@@ -120,6 +120,14 @@ const controlGameFlow = () => {
 const controlUI = () => {
   const gameFlow = controlGameFlow();
 
+  // Variables for the name modal element
+  const nameModal = document.querySelector(".name-modal");
+
+  // Toggles visibilty of the name modal
+  const toggleNameModal = () => {
+    nameModal.classList.toggle("active");
+  };
+
   // Event listener and variables for the gameboard
   const squares = document.querySelectorAll(".square");
 
@@ -146,14 +154,6 @@ const controlUI = () => {
       toggleNameModal();
     }
   });
-
-  // Variables for the name modal element
-  const nameModal = document.querySelector(".name-modal");
-
-  // Toggles visibilty of the name modal
-  const toggleNameModal = () => {
-    nameModal.classList.toggle("active");
-  };
 
   // Handles changing the player names after submitting new names
   // TODO: Add ability to use submit button with the enter key
