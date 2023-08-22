@@ -72,8 +72,6 @@ header {
 
   .gameboard {
     display: grid;
-    //   grid-template-columns: 1fr 1fr 1fr;
-    //   grid-template-rows: 1fr 1fr 1fr;
 
     grid-template: repeat(3, 100px) / repeat(3, 100px);
     gap: 1rem;
@@ -81,13 +79,13 @@ header {
     margin: 1.5rem 0;
   }
 
-  .restart, .ai, .set_name{
+  .restart, .set_name{
     font-size: 1.5rem;
     width: 12rem;
     height: 2.5rem;
   }
 
-  .restart, .set_name{
+  .restart {
     margin-bottom: 1rem;
   }
 }

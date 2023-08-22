@@ -120,14 +120,6 @@ const controlGameFlow = () => {
 const controlUI = () => {
   const gameFlow = controlGameFlow();
 
-  // Variables for the name modal element
-  const nameModal = document.querySelector(".name-modal");
-
-  // Toggles visibilty of the name modal
-  const toggleNameModal = () => {
-    nameModal.classList.toggle("active");
-  };
-
   // Event listener and variables for the gameboard
   const squares = document.querySelectorAll(".square");
 
@@ -155,7 +147,16 @@ const controlUI = () => {
     }
   });
 
+  // Variables for the name modal element
+  const nameModal = document.querySelector(".name-modal");
+
+  // Toggles visibilty of the name modal
+  const toggleNameModal = () => {
+    nameModal.classList.toggle("active");
+  };
+
   // Handles changing the player names after submitting new names
+  // TODO: Add ability to use submit button with the enter key
   const setNameSubmit = document.querySelector(".submit");
   setNameSubmit.addEventListener("click", () => {
     setPlayerNames();
@@ -191,7 +192,7 @@ const controlUI = () => {
   };
 
   const playerTurn = document.querySelector(".player-turn");
-  
+
   // Updates current player to reflect the active player
   const updatePlayerStatus = () => {
     if (GameLogic.activePlayer === 1) {
